@@ -10,7 +10,7 @@ import com.example.wanted.global.exception.RecruitmentException;
 import com.example.wanted.recruitment.entity.Recruitment;
 import com.example.wanted.recruitment.model.AddRecruitment;
 import com.example.wanted.recruitment.model.DetailRecruitmentDto;
-import com.example.wanted.recruitment.model.EditRecruitment.Request;
+import com.example.wanted.recruitment.model.EditRecruitment;
 import com.example.wanted.recruitment.model.RecruitmentDto;
 import com.example.wanted.recruitment.repository.RecruitmentRepository;
 import java.util.List;
@@ -46,7 +46,7 @@ public class RecruitmentService {
 
   // 채용공고 수정
   @Transactional
-  public RecruitmentDto editRecruitment(Long id, Request request) {
+  public RecruitmentDto editRecruitment(Long id, EditRecruitment.Request request) {
     Recruitment recruitment = recruitmentRepository.findById(id)
         .orElseThrow(() -> new RecruitmentException(INVALID_RECRUITMENT_ID));
 
