@@ -13,8 +13,8 @@ import com.example.wanted.member.entity.Member;
 import com.example.wanted.member.repository.MemberRepository;
 import com.example.wanted.recruitment.entity.Recruitment;
 import com.example.wanted.recruitment.repository.RecruitmentRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,32 +34,58 @@ class HistoryServiceTest {
   @Autowired
   private HistoryService historyService;
 
+  @BeforeEach
+  void beforeEach() {
+    historyRepository.deleteAll();
+    recruitmentRepository.deleteAll();
+    memberRepository.deleteAll();
+  }
+
   @Test
   void 채원공고_지원_테스트_성공() {
     // given
-    recruitmentRepository.save(
+    Recruitment recruitment = recruitmentRepository.save(
         Recruitment.builder()
             .position("백엔드 주니어 개발자")
             .build()
     );
 
+    Member member = memberRepository.save(
+        Member.builder()
+            .email("test@test.com")
+            .build()
+    );
+
     AddHistory.Request request = new AddHistory.Request();
-    request.setRecruitmentId(1L);
-    request.setMemberId(1L);
+    request.setRecruitmentId(recruitment.getId());
+    request.setMemberId(member.getId());
 
     // when
     Long id = historyService.addHistory(request).getId();
+    History history = historyRepository.findById(id).get();
 
     // then
-    assertEquals(1L, id);
+    assertEquals(history.getId(), id);
   }
 
   @Test
   void 채원공고_지원_테스트_없는채용_실패() {
     // given
+    Recruitment recruitment = recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .build()
+    );
+
+    Member member = memberRepository.save(
+        Member.builder()
+            .email("test@test.com")
+            .build()
+    );
+
     AddHistory.Request request = new AddHistory.Request();
-    request.setRecruitmentId(1L);
-    request.setMemberId(1L);
+    request.setRecruitmentId(0L);
+    request.setMemberId(member.getId());
 
     // when
     RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
@@ -72,15 +98,21 @@ class HistoryServiceTest {
   @Test
   void 채원공고_지원_테스트_없는회원_실패() {
     // given
-    recruitmentRepository.save(
+    Recruitment recruitment = recruitmentRepository.save(
         Recruitment.builder()
             .position("백엔드 주니어 개발자")
             .build()
     );
 
+    Member member = memberRepository.save(
+        Member.builder()
+            .email("test@test.com")
+            .build()
+    );
+
     AddHistory.Request request = new AddHistory.Request();
-    request.setRecruitmentId(1L);
-    request.setMemberId(99L);
+    request.setRecruitmentId(recruitment.getId());
+    request.setMemberId(0L);
 
     // when
     MemberException memberException = Assertions.assertThrows(MemberException.class,
