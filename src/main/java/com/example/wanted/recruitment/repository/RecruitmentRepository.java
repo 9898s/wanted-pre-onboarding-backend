@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface RecruitmentRepository extends JpaRepository<Recruitment, Long> {
 
   @Query("SELECT r FROM Recruitment r WHERE r.company.name LIKE %:search% OR r.position LIKE %:search%")
-  List<Recruitment> findByCompanyNameOrContent(String search);
+  List<Recruitment> findByCompanyNameOrPosition(String search);
 
   List<Recruitment> findAllByCompany(Company company);
 }

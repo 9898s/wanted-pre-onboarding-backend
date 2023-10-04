@@ -78,7 +78,7 @@ public class RecruitmentService {
   @Transactional(readOnly = true)
   public List<RecruitmentDto> searchRecruitment(String search) {
 
-    return recruitmentRepository.findByCompanyNameOrContent(search).stream()
+    return recruitmentRepository.findByCompanyNameOrPosition(search).stream()
         .map(RecruitmentDto::fromEntity)
         .collect(Collectors.toList());
   }
