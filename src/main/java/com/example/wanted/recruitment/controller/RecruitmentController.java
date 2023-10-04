@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -51,6 +52,16 @@ public class RecruitmentController {
   @GetMapping("/all")
   public ResponseEntity<?> allRecruitment() {
     List<RecruitmentResponse> recruitmentResponseList = recruitmentService.allRecruitment().stream()
+        .map(RecruitmentResponse::from)
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok().body(recruitmentResponseList);
+  }
+
+  @GetMapping
+  public ResponseEntity<?> searchRecruitment(@RequestParam String search) {
+    List<RecruitmentResponse> recruitmentResponseList = recruitmentService.searchRecruitment(search)
+        .stream()
         .map(RecruitmentResponse::from)
         .collect(Collectors.toList());
 

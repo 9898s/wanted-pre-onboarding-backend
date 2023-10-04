@@ -67,4 +67,13 @@ public class RecruitmentService {
         .map(RecruitmentDto::fromEntity)
         .collect(Collectors.toList());
   }
+
+  // 채용공고 검색
+  @Transactional(readOnly = true)
+  public List<RecruitmentDto> searchRecruitment(String search) {
+
+    return recruitmentRepository.findByCompanyNameOrContent(search).stream()
+        .map(RecruitmentDto::fromEntity)
+        .collect(Collectors.toList());
+  }
 }
