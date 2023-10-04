@@ -12,6 +12,7 @@ import com.example.wanted.recruitment.model.AddRecruitment;
 import com.example.wanted.recruitment.model.EditRecruitment;
 import com.example.wanted.recruitment.repository.RecruitmentRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +31,25 @@ class RecruitmentServiceTest {
   @Autowired
   private RecruitmentService recruitmentService;
 
+  @BeforeEach
+  void beforeEach() {
+    recruitmentRepository.deleteAll();
+    companyRepository.deleteAll();
+  }
+
   @Test
   void 채용공고_등록_테스트_성공() {
     // given
+    Company company = companyRepository.save(
+        Company.builder()
+            .name("원티드")
+            .nation("한국")
+            .location("서울")
+            .build()
+    );
+
     AddRecruitment.Request request = new AddRecruitment.Request();
-    request.setCompanyId(1L);
+    request.setCompanyId(company.getId());
     request.setPosition("백엔드 주니어 개발자");
     request.setReward(1000000L);
     request.setContent("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
@@ -45,14 +60,14 @@ class RecruitmentServiceTest {
     Recruitment recruitment = recruitmentRepository.findById(id).get();
 
     // then
-    assertEquals(id, recruitment.getId());
+    assertEquals(recruitment.getId(), id);
   }
 
   @Test
   void 채용공고_등록_테스트_실패() {
     // given
     AddRecruitment.Request request = new AddRecruitment.Request();
-    request.setCompanyId(5L);
+    request.setCompanyId(0L);
     request.setPosition("백엔드 주니어 개발자");
     request.setReward(1000000L);
     request.setContent("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..");
@@ -100,7 +115,7 @@ class RecruitmentServiceTest {
 
     // when
     RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
-        () -> recruitmentService.editRecruitment(2L, request));
+        () -> recruitmentService.editRecruitment(0L, request));
 
     // then
     assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
@@ -116,7 +131,7 @@ class RecruitmentServiceTest {
     );
 
     // when
-    recruitmentService.deleteRecruitment(1L);
+    recruitmentService.deleteRecruitment(recruitment.getId());
 
     // then
     assertEquals(0, recruitmentRepository.count());
@@ -133,7 +148,7 @@ class RecruitmentServiceTest {
 
     // when
     RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
-        () -> recruitmentService.deleteRecruitment(2L));
+        () -> recruitmentService.deleteRecruitment(0L));
 
     // then
     assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
@@ -222,7 +237,7 @@ class RecruitmentServiceTest {
 
     // when
     RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
-        () -> recruitmentService.deleteRecruitment(2L));
+        () -> recruitmentService.detailRecruitment(0L));
 
     // then
     assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
