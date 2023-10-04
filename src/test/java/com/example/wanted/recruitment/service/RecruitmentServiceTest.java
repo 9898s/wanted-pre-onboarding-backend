@@ -104,4 +104,37 @@ class RecruitmentServiceTest {
     // then
     assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
   }
+
+  @Test
+  void 채용공고_삭제_테스트_성공() {
+    // given
+    Recruitment recruitment = recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .build()
+    );
+
+    // when
+    recruitmentService.deleteRecruitment(1L);
+
+    // then
+    assertEquals(0, recruitmentRepository.count());
+  }
+
+  @Test
+  void 채용공고_삭제_테스트_실패() {
+    // given
+    Recruitment recruitment = recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .build()
+    );
+
+    // when
+    RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
+        () -> recruitmentService.deleteRecruitment(2L));
+
+    // then
+    assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
+  }
 }
