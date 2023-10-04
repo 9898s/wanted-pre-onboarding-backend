@@ -1,6 +1,8 @@
 package com.example.wanted.recruitment.controller;
 
 import com.example.wanted.recruitment.model.AddRecruitment;
+import com.example.wanted.recruitment.model.DetailRecruitmentDto;
+import com.example.wanted.recruitment.model.DetailRecruitmentResponse;
 import com.example.wanted.recruitment.model.EditRecruitment;
 import com.example.wanted.recruitment.model.RecruitmentDto;
 import com.example.wanted.recruitment.model.RecruitmentResponse;
@@ -66,5 +68,12 @@ public class RecruitmentController {
         .collect(Collectors.toList());
 
     return ResponseEntity.ok().body(recruitmentResponseList);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> detailRecruitment(@PathVariable Long id) {
+    DetailRecruitmentDto detailRecruitmentDto = recruitmentService.detailRecruitment(id);
+
+    return ResponseEntity.ok().body(DetailRecruitmentResponse.from(detailRecruitmentDto));
   }
 }

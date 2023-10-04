@@ -4,6 +4,7 @@ import com.example.wanted.company.entity.Company;
 import com.example.wanted.company.repository.CompanyRepository;
 import com.example.wanted.recruitment.entity.Recruitment;
 import com.example.wanted.recruitment.model.AddRecruitment;
+import com.example.wanted.recruitment.model.DetailRecruitmentDto;
 import com.example.wanted.recruitment.model.EditRecruitment.Request;
 import com.example.wanted.recruitment.model.RecruitmentDto;
 import com.example.wanted.recruitment.repository.RecruitmentRepository;
@@ -75,5 +76,21 @@ public class RecruitmentService {
     return recruitmentRepository.findByCompanyNameOrContent(search).stream()
         .map(RecruitmentDto::fromEntity)
         .collect(Collectors.toList());
+  }
+
+  // 채용공고 상세
+  @Transactional(readOnly = true)
+  public DetailRecruitmentDto detailRecruitment(Long id) {
+    Recruitment recruitment = recruitmentRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("찾을 수 없는 채용공고 번호입니다."));
+
+    List<Recruitment> recruitmentList = recruitmentRepository.findAllByCompany(
+        recruitment.getCompany());
+
+    List<Long> recruitmentIdList = recruitmentList.stream()
+        .map(Recruitment::getId)
+        .collect(Collectors.toList());
+
+    return DetailRecruitmentDto.from(recruitment, recruitmentIdList);
   }
 }
