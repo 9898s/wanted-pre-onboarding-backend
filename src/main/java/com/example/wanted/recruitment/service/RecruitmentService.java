@@ -47,4 +47,13 @@ public class RecruitmentService {
 
     return RecruitmentDto.fromEntity(recruitment);
   }
+
+  // 채용공고 삭제
+  @Transactional
+  public void deleteRecruitment(Long id) {
+    Recruitment recruitment = recruitmentRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("찾을 수 없는 채용공고 번호입니다."));
+
+    recruitmentRepository.delete(recruitment);
+  }
 }

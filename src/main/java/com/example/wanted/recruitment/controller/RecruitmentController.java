@@ -5,7 +5,9 @@ import com.example.wanted.recruitment.model.EditRecruitment;
 import com.example.wanted.recruitment.model.RecruitmentDto;
 import com.example.wanted.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,5 +35,12 @@ public class RecruitmentController {
     RecruitmentDto recruitmentDto = recruitmentService.editRecruitment(id, request);
 
     return ResponseEntity.ok().body(EditRecruitment.Response.from(recruitmentDto));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteRecruitment(@PathVariable Long id) {
+    recruitmentService.deleteRecruitment(id);
+
+    return ResponseEntity.ok().body(HttpStatus.OK);
   }
 }
