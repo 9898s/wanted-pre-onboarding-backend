@@ -40,4 +40,13 @@ public class Recruitment extends BaseEntity {
 
   @Column
   private String skill;
+
+  public Recruitment update(String position, long reward, String content, String skill) {
+    this.position = position;
+    this.reward = reward;
+    this.content = content;
+    this.skill = skill;
+
+    return this;
+  }
 }
