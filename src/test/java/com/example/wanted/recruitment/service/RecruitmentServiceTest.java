@@ -137,4 +137,26 @@ class RecruitmentServiceTest {
     // then
     assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
   }
+
+  @Test
+  void 채용공고_목록_테스트() {
+    // given
+    recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .build()
+    );
+
+    recruitmentRepository.save(
+        Recruitment.builder()
+            .position("프론트 주니어 개발자")
+            .build()
+    );
+
+    // when
+    int size = recruitmentService.allRecruitment().size();
+
+    // then
+    assertEquals(2, size);
+  }
 }
