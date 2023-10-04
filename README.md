@@ -1,7 +1,6 @@
 # 프리온보딩 백엔드 인턴십 선발과제
-> 프리온보딩 백엔드 인턴십 선발과제
 
-### Tech Stack
+## Tech Stack
 
 <div> 
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
@@ -28,7 +27,7 @@
   - 사용자는 지원한 내역을 확인할 수 있습니다.
 
 ## ERD
-![ERD](doc/img/erd.png)
+<img src="doc/img/erd.png" width="50%" height="50%">
 
 ## API 명세서
 [바로보기](doc/API.md)
