@@ -192,4 +192,39 @@ class RecruitmentServiceTest {
     // then
     assertEquals(2, size);
   }
+
+  @Test
+  void 채용공고_세부_테스트_성공() {
+    // given
+    Recruitment recruitment = recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .content("테스트")
+            .build()
+    );
+
+    // when
+    String content = recruitmentService.detailRecruitment(recruitment.getId()).getContent();
+
+    // then
+    assertEquals("테스트", content);
+  }
+
+  @Test
+  void 채용공고_세부_테스트_실패() {
+    // given
+    Recruitment recruitment = recruitmentRepository.save(
+        Recruitment.builder()
+            .position("백엔드 주니어 개발자")
+            .content("테스트")
+            .build()
+    );
+
+    // when
+    RecruitmentException recruitmentException = Assertions.assertThrows(RecruitmentException.class,
+        () -> recruitmentService.deleteRecruitment(2L));
+
+    // then
+    assertEquals(ErrorCode.INVALID_RECRUITMENT_ID, recruitmentException.getErrorCode());
+  }
 }
