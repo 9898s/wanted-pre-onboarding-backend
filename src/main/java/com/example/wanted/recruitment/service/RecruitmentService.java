@@ -7,6 +7,8 @@ import com.example.wanted.recruitment.model.AddRecruitment;
 import com.example.wanted.recruitment.model.EditRecruitment.Request;
 import com.example.wanted.recruitment.model.RecruitmentDto;
 import com.example.wanted.recruitment.repository.RecruitmentRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,5 +57,14 @@ public class RecruitmentService {
         .orElseThrow(() -> new RuntimeException("찾을 수 없는 채용공고 번호입니다."));
 
     recruitmentRepository.delete(recruitment);
+  }
+
+  // 채용공고 목록
+  @Transactional(readOnly = true)
+  public List<RecruitmentDto> allRecruitment() {
+
+    return recruitmentRepository.findAll().stream()
+        .map(RecruitmentDto::fromEntity)
+        .collect(Collectors.toList());
   }
 }
