@@ -2,6 +2,7 @@ package com.example.wanted.recruitment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.example.wanted.company.entity.Company;
 import com.example.wanted.company.repository.CompanyRepository;
 import com.example.wanted.global.exception.CompanyException;
 import com.example.wanted.global.exception.RecruitmentException;
@@ -155,6 +156,38 @@ class RecruitmentServiceTest {
 
     // when
     int size = recruitmentService.allRecruitment().size();
+
+    // then
+    assertEquals(2, size);
+  }
+
+  @Test
+  void 채용공고_검색_테스트() {
+    // given
+    Company company = companyRepository.save(
+        Company.builder()
+            .name("원티드 연구실")
+            .nation("한국")
+            .location("서울")
+            .build()
+    );
+
+    recruitmentRepository.save(
+        Recruitment.builder()
+            .company(company)
+            .position("Django 백엔드 개발자")
+            .build()
+    );
+
+    recruitmentRepository.save(
+        Recruitment.builder()
+            .company(company)
+            .position("Django 백엔드 개발자")
+            .build()
+    );
+
+    // when
+    int size = recruitmentService.searchRecruitment("Django").size();
 
     // then
     assertEquals(2, size);
