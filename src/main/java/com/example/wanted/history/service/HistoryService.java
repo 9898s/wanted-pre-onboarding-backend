@@ -1,5 +1,12 @@
 package com.example.wanted.history.service;
 
+import static com.example.wanted.global.exception.type.ErrorCode.ALREADY_RECRUITMENT_MEMBER;
+import static com.example.wanted.global.exception.type.ErrorCode.INVALID_MEMBER_ID;
+import static com.example.wanted.global.exception.type.ErrorCode.INVALID_RECRUITMENT_ID;
+
+import com.example.wanted.global.exception.HistoryException;
+import com.example.wanted.global.exception.MemberException;
+import com.example.wanted.global.exception.RecruitmentException;
 import com.example.wanted.history.entity.History;
 import com.example.wanted.history.model.AddHistory;
 import com.example.wanted.history.model.HistoryDto;
@@ -22,13 +29,13 @@ public class HistoryService {
   // 채용공고 지원
   public HistoryDto addHistory(AddHistory.Request request) {
     Recruitment recruitment = recruitmentRepository.findById(request.getRecruitmentId())
-        .orElseThrow(() -> new RuntimeException("찾을 수 없는 채용공고 번호입니다."));
+        .orElseThrow(() -> new RecruitmentException(INVALID_RECRUITMENT_ID));
 
     Member member = memberRepository.findById(request.getMemberId())
-        .orElseThrow(() -> new RuntimeException("찾을 수 없는 회원 번호입니다."));
+        .orElseThrow(() -> new MemberException(INVALID_MEMBER_ID));
 
     if (historyRepository.findByRecruitmentAndMember(recruitment, member).isPresent()) {
-      throw new RuntimeException("이미 지원한 공고입니다.");
+      throw new HistoryException(ALREADY_RECRUITMENT_MEMBER);
     }
 
     return HistoryDto.fromEntity(
